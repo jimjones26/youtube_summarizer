@@ -1,36 +1,16 @@
-import sqlite3
+from src.db_manager import DBManager
 
-def view_summary(url: str, db_path: str) -> str:
-    """Retrieve and format summary from database by URL."""
-    try:
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
-        
-        # Get matching summary with proper SQL injection protection
-        cursor.execute('''
-            SELECT title, url, date, duration, channel_name, summary 
-            FROM summaries 
-            WHERE url = ?
-        ''', (url,))
-        
-        result = cursor.fetchone()
-        conn.close()
+def display_summary(url: str):
+    """Retrieves and prints the summary of a YouTube video from the database."""
+    db_manager = DBManager()
+    summary_data = db_manager.get_summary(url)
 
-        if not result:
-            return "Error: No summary found for this URL"
-
-        # Unpack with schema-matching names
-        title, url, date, duration, channel, summary = result
-        
-        # Create CLI-friendly output format
-        return (
-            f"Title: {title}\n"
-            f"URL: {url}\n"
-            f"Date: {date}\n"
-            f"Duration: {duration} seconds\n"
-            f"Channel: {channel}\n\n"
-            f"Summary:\n{summary}"
-        )
-
-    except sqlite3.Error as e:
-        return f"Database error: {str(e)}"
+    if summary_data:
+        print(f"Title: {summary_data['title']}")
+        print(f"URL: {summary_data['url']}")
+        print(f"Date: {summary_data['date']}")
+        print(f"Duration: {summary_data['duration']} seconds")
+        print(f"Channel: {summary_data['channel_name']}")
+        print(f"Summary: {summary_data['summary']}")
+    else:
+        print("Error: No summary found for this video.")
