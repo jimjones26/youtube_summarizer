@@ -11,7 +11,7 @@ class DBManager:
         self.conn = sqlite3.connect(self.db_path)
         self.cursor = self.conn.cursor()  # Create cursor here
     
-    def create_table(self):
+    def create_schema(self):  # Changed from create_table
         sql = '''CREATE TABLE IF NOT EXISTS summaries
                  (id INTEGER PRIMARY KEY AUTOINCREMENT,
                   title TEXT,
@@ -20,6 +20,7 @@ class DBManager:
                   duration INTEGER,
                   channel_name TEXT,
                   summary TEXT)'''
+        self._connect()  # Ensure connection is established
         self.cursor.execute(sql)
         self.conn.commit()
 
@@ -28,6 +29,7 @@ class DBManager:
         sql = '''INSERT INTO summaries (title, url, date, duration, channel_name, summary)
                  VALUES (?, ?, ?, ?, ?, ?)'''
         values = (metadata['title'], metadata['url'], metadata['date'], metadata['duration'], metadata['channel_name'], summary)
+        self._connect()
         self.cursor.execute(sql, values)
         self.conn.commit()
 

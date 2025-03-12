@@ -1,7 +1,8 @@
 import argparse
 from .extractor import extract_transcript, get_video_metadata
 from .summarizer import generate_summary
-from .db_manager import create_schema, store_summary
+# Replace: from .db_manager import create_schema, store_summary
+from .db_manager import DBManager
 from .viewer import view_summary
 
 def main():
@@ -9,10 +10,12 @@ def main():
     Main function of the YouTube Video Summarizer CLI tool.
     Handles commands to process videos or view saved summaries.
     """
-    # Ensure the database schema is set up
-    create_schema()
+    # Initialize database connection
+    db = DBManager("summaries.db")
+    db.create_schema()  # Create table schema
+    
+    # ... rest of existing code ...
 
-    # Set up command-line argument parser
     parser = argparse.ArgumentParser(description="YouTube Video Summarizer")
     subparsers = parser.add_subparsers(dest='command', help='Available commands')
 
@@ -42,8 +45,8 @@ def main():
             'duration': metadata['duration'],
             'channel_name': metadata['uploader'],
         }
-        # Store summary and metadata in the database
-        store_summary(summary, storage_metadata)
+        # Store using DBManager instance
+        db.store_summary(summary, storage_metadata)
         print("Summary generated and stored successfully.")
 
     elif args.command == 'view':
@@ -54,5 +57,5 @@ def main():
         # If no command is provided, show help
         parser.print_help()
 
-if __name__ == "__main__":
-    main()
+    # Close connection at end
+    db.close_connection()
