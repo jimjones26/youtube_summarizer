@@ -1,5 +1,6 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled
+import youtube_dl
 from urllib.parse import urlparse, parse_qs
 
 def extract_transcript(url: str) -> str:
@@ -21,3 +22,13 @@ def extract_transcript(url: str) -> str:
     
     except TranscriptsDisabled:
         return "Error: Transcript is disabled for this video"
+
+def get_video_metadata(url):
+    """
+    Fetch metadata for a YouTube video using youtube_dl.
+    Returns a dictionary with title, duration, upload_date, uploader, etc.
+    """
+    ydl_opts = {'quiet': True}  # Suppress console output
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(url, download=False)  # Fetch info without downloading
+        return info
