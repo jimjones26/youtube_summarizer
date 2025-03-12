@@ -3,7 +3,7 @@ from .extractor import extract_transcript, get_video_metadata
 from .summarizer import generate_summary
 # Replace: from .db_manager import create_schema, store_summary
 from .db_manager import DBManager
-from .viewer import view_summary
+from .viewer import display_summary
 
 def main():
     """
@@ -51,7 +51,7 @@ def main():
 
     elif args.command == 'view':
         # Display the summary for the given URL
-        view_summary(args.url)
+        display_summary(args.url)
 
     else:
         # If no command is provided, show help

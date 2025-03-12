@@ -2,7 +2,7 @@ from src.db_manager import DBManager
 
 def display_summary(url: str):
     """Retrieves and prints the summary of a YouTube video from the database."""
-    db_manager = DBManager()
+    db_manager = DBManager("summaries.db")
     summary_data = db_manager.get_summary(url)
 
     if summary_data:
