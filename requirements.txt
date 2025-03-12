@@ -1,3 +1,4 @@
 pytest
 youtube_transcript_api
 requests
+pytest-mock
