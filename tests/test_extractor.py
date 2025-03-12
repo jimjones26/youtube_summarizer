@@ -25,9 +25,9 @@ def test_extract_transcript_api_error(mocker):
     """Test error handling for disabled transcripts"""
     # Mock API exception
     mock_api = mocker.patch('youtube_transcript_api.YouTubeTranscriptApi.get_transcript')
-    mock_api.side_effect = TranscriptsDisabled('video_id', 'en')
-
-    # Test error handling
+    mock_api.side_effect = TranscriptsDisabled('video_id')  # Remove language parameter
+    
+    # Rest of test remains unchanged
     url = "https://youtu.be/xyz789"
     result = extract_transcript(url)
     
