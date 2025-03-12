@@ -9,3 +9,6 @@
 
 # Aider
 .aider*
+
+# env
+.venv
